@@ -1,67 +1,27 @@
-
-.card{
-  width: 400px;
-  border: none;
-  border-radius: 10px;
-
-  background-color: #fff;
-}
-
-
-
-.stats{
-
-      background: #f2f5f8 !important;
-
-    color: #000 !important;
-}
-.articles{
-  font-size:10px;
-  color: #a1aab9;
-}
-.number1{
-  font-weight:500;
-}
-.followers{
-    font-size:10px;
-  color: #a1aab9;
-
-}
-.number2{
-  font-weight:500;
-}
-.rating{
-    font-size:10px;
-  color: #a1aab9;
-}
-.number3{
-  font-weight:500;
-}
-
-.meupost{
-
- background: #f2f5f8 !important;
-
-}
-
 /* ----- Estilo Geral ----- */
 body {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* fundo claro */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #212529;
+    margin: 0;
+    padding: 0;
 }
 
 /* ----- Cards ----- */
 .card {
+    width: 400px;
     border: none;
     border-radius: 12px;
-    background-color: #fff;
+    background: linear-gradient(145deg, #0d47a1, #1565c0); /* azul escuro elegante */
+    color: #f1f1f1;
     padding: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(13, 71, 161, 0.4);
 }
 
 @media (max-width: 576px) {
@@ -72,8 +32,8 @@ body {
 
 /* ----- Estatísticas ----- */
 .stats {
-    background: #f2f5f8 !important;
-    color: #000 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #e3f2fd !important;
     border-radius: 8px;
     padding: 0.5rem 0.75rem;
 }
@@ -82,35 +42,114 @@ body {
 .followers,
 .rating {
     font-size: 0.8rem;
-    color: #6c757d;
+    color: #bbdefb;
 }
 
 .number1,
 .number2,
 .number3 {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #212529;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
 }
 
 /* ----- Post ----- */
 .meupost {
-    background: #f2f5f8 !important;
+    background: linear-gradient(145deg, #1565c0, #1e88e5) !important;
     border-radius: 12px;
     padding: 1rem;
+    color: #f1f1f1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* ----- Badges ----- */
 .badge {
     font-size: 0.75rem;
     padding: 0.4em 0.6em;
+    background: #0d47a1;
+    color: #fff;
 }
 
-/* ----- Botões e Inputs ----- */
-input.form-control-lg {
+/* ----- Inputs dentro dos cards/menu ----- */
+.card input.form-control-lg,
+.menu input.form-control-lg {
     border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transition: all 0.3s ease;
 }
 
-button.btn-lg {
+.card input.form-control-lg::placeholder,
+.menu input.form-control-lg::placeholder {
+    color: rgba(224, 224, 224, 0.9);
+}
+
+/* ----- Botões dentro dos cards/menu ----- */
+.card button.btn-lg,
+.menu button.btn-lg {
     border-radius: 12px;
+    background-color: #0d47a1;
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.card button.btn-lg:hover,
+.menu button.btn-lg:hover {
+    background-color: #1976d2;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+}
+
+/* ----- Menu (Navbar ou Sidebar) ----- */
+.navbar, .menu {
+    background: linear-gradient(145deg, #0d47a1, #1565c0) !important;
+    color: #f1f1f1 !important;
+    border-bottom: 1px solid #0d47a1;
+}
+
+.navbar a,
+.menu a {
+    color: #e3f2fd !important;
+    transition: color 0.2s ease;
+}
+
+.navbar a:hover,
+.menu a:hover {
+    color: #90caf9 !important; /* azul claro destaque */
+}
+
+/* ----- Botão Buscar (dourado discreto) ----- */
+.btn-buscar {
+    border-radius: 12px;
+    background-color: #c8a951;   /* dourado elegante */
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(200, 169, 81, 0.3);
+}
+
+.btn-buscar:hover {
+    background-color: #b8933f;  /* dourado mais forte no hover */
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(200, 169, 81, 0.6), 0 0 8px rgba(200, 169, 81, 0.3);
+}
+
+/* ----- Responsividade adicional ----- */
+@media (max-width: 768px) {
+    .card input.form-control-lg,
+    .menu input.form-control-lg,
+    .card button.btn-lg,
+    .menu button.btn-lg {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.3em 0.5em;
+    }
 }
