@@ -12,6 +12,7 @@ from PIL import Image
 
 
 @app.route("/")
+@login_required
 def home():
     termo_busca = request.args.get("q", "").strip()
 
