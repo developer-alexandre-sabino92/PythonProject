@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, DateField, DecimalField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange, optional
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange, optional, Regexp
 from sistemacooperativa.models import Usuario
 from flask_login import current_user
 
@@ -45,6 +45,11 @@ class FormEditarPerfil(FlaskForm):
 
 class FormCriarPost(FlaskForm):
     titulo = StringField('Nome do Cliente', validators=[DataRequired(), Length(2, 140)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    telefone = StringField('Telefone', validators=[DataRequired(), Regexp(
+                r'^\(?\d{2}\)?[\s\-]?\d{4,5}[\-]?\d{4}$',
+                message="Formato de telefone inválido. Ex: (21) 99999-9999"
+            ), Length(min=8, max=20)])
     implantacao = DateField('Data da Implantação',validators=[DataRequired()])
     numero_contrato = StringField('Número do Contrato', validators=[DataRequired(), Length(2, 140)])
     cnpj_cpf = StringField('CNPJ ou CPF', validators=[DataRequired(), Length(2, 140)])

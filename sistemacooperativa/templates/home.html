@@ -4,7 +4,7 @@
 <div class="container mt-4">
 
     <!-- Barra de busca -->
-    <form method="get" action="{{ url_for('home') }}" class="row g-2 mb-4">
+    <form method="get" action="{{ url_for('home') }}" class="row g-2 mb-4 align-items-center">
         <div class="col-sm-10 col-8">
             <input
                 type="text"
@@ -15,11 +15,13 @@
             >
         </div>
         <div class="col-sm-2 col-4">
-            <button class="btn-buscar btn-lg w-100">Buscar</button>
+            <button class="btn-buscar w-100">Buscar</button>
         </div>
     </form>
 
     {% if posts %}
+    <!-- Wrapper específico da Home -->
+    <div class="home-cards">
         <div class="row g-4">
             {% for post in posts %}
             <div class="col-lg-6 col-md-12">
@@ -35,7 +37,9 @@
                                  style="object-fit: cover;">
                             <div class="mt-2">
                                 {% for curso in post.autor.cursos.split(';') if curso %}
-                                    <span class="badge bg-success me-1">{{ curso }}</span>
+                                <span class="badge">{{ curso }}</span>
+                                {% else %}
+                                <span class="badge bg-secondary">não informado</span>
                                 {% endfor %}
                             </div>
                         </div>
@@ -43,20 +47,22 @@
                         <!-- Informações -->
                         <div class="flex-grow-1">
                             <h5 class="mb-1">
-                                <a href="{{ url_for('exibir_post', post_id=post.id) }}" class="text-decoration-none text-primary fw-bold">
+                                <a href="{{ url_for('exibir_post', post_id=post.id) }}">
                                     {{ post.titulo }}
                                 </a>
                             </h5>
                             <p class="text-muted small mb-3">{{ post.razao_social }}</p>
 
                             <ul class="list-unstyled mb-0">
-                                <li><strong>Operadora:</strong> {{ post.corpo }}</li>
-                                <li><strong>Data Implantação:</strong> {{ post.implantacao | brdate }}</li>
-                                <li><strong>Nº Contrato:</strong> {{ post.numero_contrato }}</li>
-                                <li><strong>CNPJ/CPF:</strong> {{ post.cnpj_cpf }}</li>
-                                <li><strong>Valor Contrato:</strong> {{ post.valor_contrato | currency }}</li>
-                                <li><strong>Bônus por Vida?:</strong> {{ 'Sim' if post.bonus_vida else 'Não' }}</li>
-                                <li><strong>Valor Bônus:</strong> {{ post.valor_bonus | currency }}</li>
+                                <li><i class="bi bi-envelope-fill me-2 text-primary"></i><strong>Email:</strong> {{ post.email }}</li>
+                                <li><i class="bi bi-telephone-fill me-2 text-success"></i><strong>Telefone:</strong> {{ post.telefone }}</li>
+                                <li><i class="bi bi-building me-2 text-info"></i><strong>Operadora:</strong> {{ post.corpo }}</li>
+                                <li><i class="bi bi-calendar-check-fill me-2 text-warning"></i><strong>Data Implantação:</strong> {{ post.implantacao | brdate }}</li>
+                                <li><i class="bi bi-file-earmark-text-fill me-2 text-secondary"></i><strong>Nº Contrato:</strong> {{ post.numero_contrato }}</li>
+                                <li><i class="bi bi-card-heading me-2 text-danger"></i><strong>CNPJ/CPF:</strong> {{ post.cnpj_cpf }}</li>
+                                <li><i class="bi bi-currency-dollar me-2 text-success"></i><strong>Valor Contrato:</strong> {{ post.valor_contrato | currency }}</li>
+                                <li><i class="bi bi-gift-fill me-2 text-pink"></i><strong>Bônus por Vida?:</strong> {{ 'Sim' if post.bonus_vida else 'Não' }}</li>
+                                <li><i class="bi bi-coin me-2 text-warning"></i><strong>Valor Bônus:</strong> {{ post.valor_bonus | currency }}</li>
                             </ul>
                         </div>
 
@@ -65,12 +71,11 @@
             </div>
             {% endfor %}
         </div>
+    </div>
     {% else %}
-        <div class="alert alert-warning text-center mt-5" role="alert">
-            Nenhum resultado encontrado para sua busca.
-        </div>
+    <div class="alert alert-warning text-center mt-5" role="alert">
+        Nenhum resultado encontrado para sua busca.
+    </div>
     {% endif %}
 </div>
 {% endblock %}
-
-

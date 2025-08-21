@@ -1,41 +1,52 @@
 /* ----- Estilo Geral ----- */
 body {
-    background-color: #f8f9fa; /* fundo claro */
+    background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #212529;
     margin: 0;
     padding: 0;
 }
 
-/* ----- Cards ----- */
+/* ----- Cards Padrão ----- */
 .card {
-    width: 400px;
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem auto;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(145deg, #0d47a1, #1565c0); /* azul escuro elegante */
-    color: #f1f1f1;
-    padding: 1rem;
+    background: #fff;
+    color: #212529;
+    padding: 1.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(13, 71, 161, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 576px) {
     .card {
-        width: 100%;
+        width: 95%;
     }
 }
 
-/* ----- Estatísticas ----- */
+/* ----- Centralização de título dentro do card ----- */
+.card h1,
+.card h2,
+.card h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* ----- Estatísticas (cards de info) ----- */
 .stats {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #e3f2fd !important;
-    border-radius: 8px;
-    padding: 0.5rem 0.75rem;
+    background: linear-gradient(145deg, #0d47a1, #1565c0);
+    color: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(13, 71, 161, 0.3);
 }
 
 .articles,
@@ -53,53 +64,128 @@ body {
     color: #fff;
 }
 
-/* ----- Post ----- */
+/* ----- Post (visualização do cliente) ----- */
 .meupost {
-    background: linear-gradient(145deg, #1565c0, #1e88e5) !important;
-    border-radius: 12px;
-    padding: 1rem;
-    color: #f1f1f1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #1565c0, #1e88e5);
+    border-radius: 15px;
+    padding: 2rem;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    text-align: center;
 }
 
-/* ----- Badges ----- */
-.badge {
-    font-size: 0.75rem;
-    padding: 0.4em 0.6em;
-    background: #0d47a1;
+/* Foto de perfil */
+.meupost .image img {
+    border: 4px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    margin-bottom: 1rem;
+}
+
+/* Nome principal */
+.meupost h5 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Sub-informação (criado em, editar/excluir) */
+.meupost small {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+/* Links Editar / Excluir */
+.meupost a {
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 0.3rem;
+    color: #ffeb3b;
+}
+
+.meupost a:hover {
+    text-decoration: underline;
+    color: #fff176;
+}
+
+/* Lista de dados (dt/dd) */
+.meupost dl {
+    margin-top: 1.5rem;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* duas colunas */
+    gap: 0.8rem 1.5rem;
+}
+
+.meupost dt {
+    font-weight: 600;
+    color: #e3f2fd;
+    font-size: 0.95rem;
+}
+
+.meupost dd {
+    margin: 0;
+    font-weight: 400;
+    font-size: 0.95rem;
     color: #fff;
 }
 
-/* ----- Inputs dentro dos cards/menu ----- */
+/* Badge */
+.badge {
+    background: #ffc107;
+    color: #000;
+    border-radius: 20px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+/* ----- Inputs (em formulários) ----- */
 .card input.form-control-lg,
 .menu input.form-control-lg {
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
+    border-radius: 8px;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    color: #212529;
     transition: all 0.3s ease;
+    padding: 0.6rem 0.75rem;
+}
+
+.card input.form-control-lg:focus,
+.menu input.form-control-lg:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+    outline: none;
 }
 
 .card input.form-control-lg::placeholder,
 .menu input.form-control-lg::placeholder {
-    color: rgba(224, 224, 224, 0.9);
+    color: #6c757d;
 }
 
 /* ----- Botões dentro dos cards/menu ----- */
-.card button.btn-lg,
-.menu button.btn-lg {
-    border-radius: 12px;
-    background-color: #0d47a1;
+.card .btn-lg,
+.menu .btn-lg {
+    display: block;
+    margin: 1.5rem auto 0;
+    border-radius: 10px;
+    background-color: #c5a437;
     color: #fff;
     border: none;
     transition: all 0.3s ease;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
 }
 
-.card button.btn-lg:hover,
-.menu button.btn-lg:hover {
-    background-color: #1976d2;
+.card .btn-lg:hover,
+.menu .btn-lg:hover {
+    background-color: #b8932f;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
 /* ----- Menu (Navbar ou Sidebar) ----- */
@@ -117,29 +203,37 @@ body {
 
 .navbar a:hover,
 .menu a:hover {
-    color: #90caf9 !important; /* azul claro destaque */
+    color: #90caf9 !important;
 }
 
 /* ----- Botão Buscar (dourado discreto) ----- */
 .btn-buscar {
-    border-radius: 12px;
-    background-color: #c8a951;   /* dourado elegante */
+    background-color: #c5a437;
     color: #fff;
+    font-weight: bold;
     border: none;
-    padding: 0.6rem 1.2rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(200, 169, 81, 0.3);
+    border-radius: 8px;
+    padding: 0.65rem 1rem; /* mesma altura do input */
+    font-size: 1.1rem;
+    line-height: 1.5;
+    height: 100%; /* ocupa altura total da coluna */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .btn-buscar:hover {
-    background-color: #b8933f;  /* dourado mais forte no hover */
+    background-color: #b8932f;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(200, 169, 81, 0.6), 0 0 8px rgba(200, 169, 81, 0.3);
 }
 
-/* ----- Responsividade adicional ----- */
+/* ----- Responsividade ----- */
 @media (max-width: 768px) {
+    .meupost dl {
+        grid-template-columns: 1fr; /* em 1 coluna no mobile */
+    }
+
     .card input.form-control-lg,
     .menu input.form-control-lg,
     .card button.btn-lg,
@@ -152,4 +246,79 @@ body {
         font-size: 0.7rem;
         padding: 0.3em 0.5em;
     }
+}
+/* ----- Cards da página Home ----- */
+.home-cards .card {
+    background: linear-gradient(135deg, #c9dbf8, #e6ecf5, #b8932f30);
+    border-radius: 18px;
+    border: none;
+    padding: 1.8rem;
+    max-width: 650px;
+    margin: 1rem auto;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.home-cards .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* Aplica Poppins na seção */
+.home-cards .card {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Nome / Título */
+.home-cards .card h5 a {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0d47a1;
+    text-decoration: none;
+    letter-spacing: 0.5px;  /* deixa mais sofisticado */
+    transition: color 0.2s;
+}
+.home-cards .card h5 a:hover {
+    color: #1565c0;
+}
+
+/* Razão social */
+.home-cards .card p {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+}
+
+/* Foto */
+.home-cards .card img {
+    border: 3px solid #f1f1f1;
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Lista de informações */
+.home-cards .card ul {
+    margin-top: 1rem;
+    padding-left: 0;
+}
+.home-cards .card ul li {
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+    color: #444;
+    font-weight: 500; /* melhora legibilidade */
+}
+
+
+/* Cursos (badges) */
+.home-cards .badge {
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    color: #fff;
+    border-radius: 30px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(13, 71, 161, 0.25);
 }

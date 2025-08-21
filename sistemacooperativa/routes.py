@@ -88,7 +88,7 @@ def perfil():
 def criar_post():
     form = FormCriarPost()
     if form.validate_on_submit():
-        post = Post(titulo=form.titulo.data, implantacao=form.implantacao.data, numero_contrato=form.numero_contrato.data,cnpj_cpf=form.cnpj_cpf.data,razao_social=form.razao_social.data, valor_contrato=form.valor_contrato.data, bonus_vida=form.bonus_vida.data, valor_bonus=form.valor_bonus.data, corpo=form.corpo.data, autor=current_user)
+        post = Post(titulo=form.titulo.data, email=form.email.data, telefone=form.telefone.data, implantacao=form.implantacao.data, numero_contrato=form.numero_contrato.data,cnpj_cpf=form.cnpj_cpf.data,razao_social=form.razao_social.data, valor_contrato=form.valor_contrato.data, bonus_vida=form.bonus_vida.data, valor_bonus=form.valor_bonus.data, corpo=form.corpo.data, autor=current_user)
         database.session.add(post)
         database.session.commit()
         flash('Cliente Cadastrado com Sucesso', 'alert-success')
@@ -146,6 +146,8 @@ def exibir_post(post_id):
         form = FormCriarPost()
         if request.method == 'GET':
             form.titulo.data = post.titulo
+            form.email.data = post.email
+            form.telefone.data = post.telefone
             form.corpo.data = post.corpo
             form.implantacao.data = post.implantacao
             form.numero_contrato.data = post.numero_contrato
@@ -156,6 +158,8 @@ def exibir_post(post_id):
             form.valor_bonus.data = post.valor_bonus
         elif form.validate_on_submit():
             post.titulo = form.titulo.data
+            post.email = form.email.data
+            post.telefone = form.telefone.data
             post.implantacao = form.implantacao.data
             post.numero_contrato = form.numero_contrato.data
             post.cnpj_cpf = form.cnpj_cpf.data

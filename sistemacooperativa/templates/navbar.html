@@ -7,10 +7,10 @@
           <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Início</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('usuarios') }}">Usuários</a>
+          <a class="nav-link disabled" href="{{ url_for('usuarios') }}"></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('contato') }}">Contato</a>
+          <a class="nav-link disabled" href="{{ url_for('contato') }}"></a>
         </li>
       </ul>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -19,7 +19,7 @@
             <a class="nav-link" href="{{ url_for('criar_post')}}">Cadastrar</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('perfil')}}">Meu Perfil</a>
+            <a class="nav-link" href="{{ url_for('perfil')}}">Perfil Cliente</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('sair')}}">Sair</a>
