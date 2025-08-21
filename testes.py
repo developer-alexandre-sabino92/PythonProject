@@ -28,6 +28,6 @@ from app import app, database
 #     print(post.titulo)
 #     print(post.autor.email)
 
-# with app.app_context():
-#    database.drop_all()
-#    database.create_all()
+with app.app_context():
+    database.drop_all()
+    database.create_all()
