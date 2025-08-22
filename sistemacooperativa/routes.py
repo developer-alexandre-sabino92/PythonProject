@@ -16,7 +16,7 @@ def home():
 
     if termo_busca:
         posts = Post.query.filter(
-            Post.usuario_id == current_user.id,
+            Post.id_usuario == current_user.id,
             or_(
                 Post.titulo.ilike(f"%{termo_busca}%"),
                 Post.razao_social.ilike(f"%{termo_busca}%"),
@@ -24,7 +24,7 @@ def home():
             )
         ).order_by(Post.id.desc()).all()
     else:
-        posts = Post.query.filter_by(usuario_id=current_user.id).order_by(Post.id.desc()).all()
+        posts = Post.query.filter_by(id_usuario=current_user.id).order_by(Post.id.desc()).all()
 
     return render_template('home.html', posts=posts, termo_busca=termo_busca)
 
@@ -156,7 +156,7 @@ def editar_perfil():
 @login_required
 def exibir_post(post_id):
     # só carrega se o post pertencer ao usuário logado
-    post = Post.query.filter_by(id=post_id, usuario_id=current_user.id).first_or_404()
+    post = Post.query.filter_by(id=post_id, id_usuario=current_user.id).first_or_404()
     form = FormCriarPost()
 
     if request.method == 'GET':
@@ -194,7 +194,7 @@ def exibir_post(post_id):
 @login_required
 def excluir_post(post_id):
     # só carrega se o post pertencer ao usuário logado
-    post = Post.query.filter_by(id=post_id, usuario_id=current_user.id).first_or_404()
+    post = Post.query.filter_by(id=post_id, id_usuario=current_user.id).first_or_404()
     database.session.delete(post)
     database.session.commit()
     flash('Post Excluído com Sucesso', 'alert-danger')
