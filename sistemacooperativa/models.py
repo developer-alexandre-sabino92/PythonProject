@@ -22,7 +22,7 @@ class Usuario(database.Model, UserMixin):
 class Post(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     titulo = database.Column(database.String, nullable=False)
-    email = database.Column(database.String, nullable=False, unique=True)
+    email_cliente = database.Column(database.String, nullable=False, unique=True)
     telefone = database.Column(database.String, nullable=False)
     implantacao = database.Column(database.Date, nullable=False)
     numero_contrato = database.Column(database.String, nullable=False)

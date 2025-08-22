@@ -45,7 +45,7 @@ class FormEditarPerfil(FlaskForm):
 
 class FormCriarPost(FlaskForm):
     titulo = StringField('Nome do Cliente', validators=[DataRequired(), Length(2, 140)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email_cliente = StringField('Email', validators=[DataRequired(), Email()])
     telefone = StringField('Telefone', validators=[DataRequired(), Regexp(
                 r'^\(?\d{2}\)?[\s\-]?\d{4,5}[\-]?\d{4}$',
                 message="Formato de telefone inválido. Ex: (21) 99999-9999"
