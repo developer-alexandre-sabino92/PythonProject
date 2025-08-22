@@ -6,6 +6,9 @@ import os
 import sqlalchemy
 import locale
 from datetime import datetime
+from flask_migrate import Migrate
+
+
 
 # ----- Configura formatação de moeda e data para o Brasil -----
 try:
@@ -47,6 +50,9 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'alert-info'
+
+# Flask-Migrate
+migrate = Migrate(app, database)
 
 # ----- Registra filtros no Jinja -----
 app.jinja_env.filters['currency'] = format_currency
