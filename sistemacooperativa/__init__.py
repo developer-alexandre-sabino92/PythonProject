@@ -62,14 +62,18 @@ app.jinja_env.filters['brdate'] = format_date
 from sistemacooperativa import models
 from sistemacooperativa import routes
 
-# ----- Verifica e cria tabelas se não existirem -----
+# ----- Força recriação das tabelas -----
 engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 inspector = sqlalchemy.inspect(engine)
 
-if not inspector.has_table("usuario"):
-    with app.app_context():
-        database.create_all()
-        print("Base de dados criada")
-else:
-    print("Base de dados já existente")
+with app.app_context():
+    # Se a tabela "usuario" existir, apaga todas as tabelas
+    if inspector.has_table("usuario"):
+        database.drop_all()
+        print("Tabelas existentes apagadas")
+
+    # Cria todas as tabelas a partir dos modelos
+    database.create_all()
+    print("Base de dados criada/recriada")
+
 
