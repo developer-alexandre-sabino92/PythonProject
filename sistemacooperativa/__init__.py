@@ -7,8 +7,8 @@ import sqlalchemy
 import locale
 from datetime import datetime
 from flask_migrate import Migrate
-from sqlalchemy import inspect, text
-from sistemacooperativa.models import Usuario, Post
+
+
 
 
 
@@ -68,36 +68,27 @@ from sistemacooperativa import routes
 engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 inspector = sqlalchemy.inspect(engine)
 
-# Lista de todas as tabelas do seu Base
-tabelas = [Usuario, Post]
+if not inspector.has_table("usuario"):
+    with app.app_context():
+        database.create_all()
+        print("Base de dados criada")
+else:
+    print("Base de dados já existente")
 
-with app.app_context():
-    for tabela in tabelas:
-        nome_tabela = tabela.__tablename__
-        if not inspector.has_table(nome_tabela):
-            database.create_all()
-            print(f"Tabela '{nome_tabela}' criada.")
-        else:
-            print(f"Tabela '{nome_tabela}' já existente.")
+    # ----- Adiciona colunas que faltam diretamente -----
+    colunas_existentes = [col['name'] for col in inspector.get_columns("usuario")]
 
-            # Verifica e adiciona colunas faltantes
-            colunas_existentes = [col['name'] for col in inspector.get_columns(nome_tabela)]
-            for coluna in tabela.__table__.columns:
-                if coluna.name not in colunas_existentes:
-                    # Converte o tipo SQLAlchemy para string compatível com SQL
-                    tipo_sql = str(coluna.type.compile(dialect=engine.dialect))
+    colunas_necessarias = {
+        "username": "VARCHAR(50) NOT NULL",
+        "email": "VARCHAR(100) NOT NULL",
+        "senha": "VARCHAR(100) NOT NULL",
+        "foto_perfil": "VARCHAR(100) DEFAULT 'default.jpg'",
+        "cursos": "VARCHAR(100) NOT NULL DEFAULT 'não informado'"
+    }
 
-                    # Se houver default, adiciona ao SQL
-                    default = ''
-                    if coluna.default is not None and coluna.default.arg is not None:
-                        valor_default = coluna.default.arg
-                        # Se for string, adiciona aspas
-                        if isinstance(valor_default, str):
-                            valor_default = f"'{valor_default}'"
-                        default = f" DEFAULT {valor_default}"
-
-                    sql = f'ALTER TABLE {nome_tabela} ADD COLUMN {coluna.name} {tipo_sql}{default}'
-                    with engine.connect() as conn:
-                        conn.execute(text(sql))
-                    print(f"Coluna '{coluna.name}' adicionada à tabela '{nome_tabela}'.")
-
+    with engine.connect() as conn:
+        for coluna, tipo in colunas_necessarias.items():
+            if coluna not in colunas_existentes:
+                sql = f'ALTER TABLE usuario ADD COLUMN {coluna} {tipo}'
+                conn.execute(sql)
+                print(f"Coluna '{coluna}' adicionada à tabela 'usuario'.")
