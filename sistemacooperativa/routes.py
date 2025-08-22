@@ -9,8 +9,6 @@ from sqlalchemy import or_
 from PIL import Image
 
 
-
-
 @app.route("/")
 @login_required
 def home():
@@ -18,26 +16,31 @@ def home():
 
     if termo_busca:
         posts = Post.query.filter(
+            Post.usuario_id == current_user.id,
             or_(
-                    Post.titulo.ilike(f"%{termo_busca}%"),
-                    Post.razao_social.ilike(f"%{termo_busca}%"),
-                    Post.cnpj_cpf.ilike(f"%{termo_busca}%")
-                )
+                Post.titulo.ilike(f"%{termo_busca}%"),
+                Post.razao_social.ilike(f"%{termo_busca}%"),
+                Post.cnpj_cpf.ilike(f"%{termo_busca}%")
+            )
         ).order_by(Post.id.desc()).all()
     else:
-        posts = Post.query.order_by(Post.id.desc()).all()
+        posts = Post.query.filter_by(usuario_id=current_user.id).order_by(Post.id.desc()).all()
 
     return render_template('home.html', posts=posts, termo_busca=termo_busca)
+
 
 @app.route("/contato")
 def contato():
     return render_template('contato.html')
 
+
 @app.route("/usuarios")
 @login_required
 def usuarios():
-    lista_usuarios = Usuario.query.all()
+    # Apenas o usuário logado visualiza (evita expor todos)
+    lista_usuarios = [current_user]
     return render_template('usuarios.html', lista_usuarios=lista_usuarios)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -50,16 +53,17 @@ def login():
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(f'Login feito com sucesso para o email: {form_login.email.data}', 'alert-success')
             par_next = request.args.get('next')
-            if par_next:
-                return redirect(par_next)
-            else:
-                return redirect(url_for('home'))
+            return redirect(par_next or url_for('home'))
         else:
             flash(f'Falha no Login. Email ou Senha Incorretos.', 'alert-danger')
 
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
         senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data).decode("utf-8")
-        usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
+        usuario = Usuario(
+            username=form_criarconta.username.data,
+            email=form_criarconta.email.data,
+            senha=senha_cript
+        )
         database.session.add(usuario)
         database.session.commit()
 
@@ -67,6 +71,7 @@ def login():
         return redirect(url_for('home'))
 
     return render_template('login.html', form_login=form_login, form_criarconta=form_criarconta)
+
 
 @app.route('/sair')
 @login_required
@@ -76,19 +81,32 @@ def sair():
     return redirect(url_for('home'))
 
 
-
 @app.route('/perfil')
 @login_required
 def perfil():
-    foto_perfil = url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil))
+    foto_perfil = url_for('static', filename=f'fotos_perfil/{current_user.foto_perfil}')
     return render_template('perfil.html', foto_perfil=foto_perfil)
+
 
 @app.route('/post/criar', methods=['GET', 'POST'])
 @login_required
 def criar_post():
     form = FormCriarPost()
     if form.validate_on_submit():
-        post = Post(titulo=form.titulo.data, email_cliente=form.email_cliente.data, telefone=form.telefone.data, implantacao=form.implantacao.data, numero_contrato=form.numero_contrato.data,cnpj_cpf=form.cnpj_cpf.data,razao_social=form.razao_social.data, valor_contrato=form.valor_contrato.data, bonus_vida=form.bonus_vida.data, valor_bonus=form.valor_bonus.data, corpo=form.corpo.data, autor=current_user)
+        post = Post(
+            titulo=form.titulo.data,
+            email_cliente=form.email_cliente.data,
+            telefone=form.telefone.data,
+            implantacao=form.implantacao.data,
+            numero_contrato=form.numero_contrato.data,
+            cnpj_cpf=form.cnpj_cpf.data,
+            razao_social=form.razao_social.data,
+            valor_contrato=form.valor_contrato.data,
+            bonus_vida=form.bonus_vida.data,
+            valor_bonus=form.valor_bonus.data,
+            corpo=form.corpo.data,
+            autor=current_user
+        )
         database.session.add(post)
         database.session.commit()
         flash('Cliente Cadastrado com Sucesso', 'alert-success')
@@ -109,13 +127,8 @@ def salvar_imagem(imagem):
 
 
 def atualizar_cursos(form):
-    lista_cursos = []
-    for campo in form:
-        if 'curso_' in campo.name:
-            if campo.data:
-                lista_cursos.append(campo.label.text)
+    lista_cursos = [campo.label.text for campo in form if 'curso_' in campo.name and campo.data]
     return ';'.join(lista_cursos)
-
 
 
 @app.route('/perfil/editar', methods=['GET', 'POST'])
@@ -135,57 +148,56 @@ def editar_perfil():
     elif request.method == "GET":
         form.email.data = current_user.email
         form.username.data = current_user.username
-    foto_perfil = url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil))
+    foto_perfil = url_for('static', filename=f'fotos_perfil/{current_user.foto_perfil}')
     return render_template('editarperfil.html', foto_perfil=foto_perfil, form=form)
 
-@app.route('/post/<post_id>', methods=['GET', 'POST'])
+
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def exibir_post(post_id):
-    post = Post.query.get(post_id)
-    if current_user == post.autor:
-        form = FormCriarPost()
-        if request.method == 'GET':
-            form.titulo.data = post.titulo
-            form.email_cliente.data = post.email_cliente
-            form.telefone.data = post.telefone
-            form.corpo.data = post.corpo
-            form.implantacao.data = post.implantacao
-            form.numero_contrato.data = post.numero_contrato
-            form.cnpj_cpf.data = post.cnpj_cpf
-            form.razao_social.data = post.razao_social
-            form.valor_contrato.data = post.valor_contrato
-            form.bonus_vida.data = post.bonus_vida
-            form.valor_bonus.data = post.valor_bonus
-        elif form.validate_on_submit():
-            post.titulo = form.titulo.data
-            post.email_cliente = form.email_cliente.data
-            post.telefone = form.telefone.data
-            post.implantacao = form.implantacao.data
-            post.numero_contrato = form.numero_contrato.data
-            post.cnpj_cpf = form.cnpj_cpf.data
-            post.razao_social = form.razao_social.data
-            post.valor_contrato = form.valor_contrato.data
-            post.bonus_vida = form.bonus_vida.data
-            post.valor_bonus = form.valor_bonus.data
-            post.corpo = form.corpo.data
-            database.session.commit()
-            flash('Post Atualizado com Sucesso', 'alert-success')
-            return redirect(url_for('home'))
-    else:
-        form = None
+    # só carrega se o post pertencer ao usuário logado
+    post = Post.query.filter_by(id=post_id, usuario_id=current_user.id).first_or_404()
+    form = FormCriarPost()
+
+    if request.method == 'GET':
+        form.titulo.data = post.titulo
+        form.email_cliente.data = post.email_cliente
+        form.telefone.data = post.telefone
+        form.corpo.data = post.corpo
+        form.implantacao.data = post.implantacao
+        form.numero_contrato.data = post.numero_contrato
+        form.cnpj_cpf.data = post.cnpj_cpf
+        form.razao_social.data = post.razao_social
+        form.valor_contrato.data = post.valor_contrato
+        form.bonus_vida.data = post.bonus_vida
+        form.valor_bonus.data = post.valor_bonus
+    elif form.validate_on_submit():
+        post.titulo = form.titulo.data
+        post.email_cliente = form.email_cliente.data
+        post.telefone = form.telefone.data
+        post.implantacao = form.implantacao.data
+        post.numero_contrato = form.numero_contrato.data
+        post.cnpj_cpf = form.cnpj_cpf.data
+        post.razao_social = form.razao_social.data
+        post.valor_contrato = form.valor_contrato.data
+        post.bonus_vida = form.bonus_vida.data
+        post.valor_bonus = form.valor_bonus.data
+        post.corpo = form.corpo.data
+        database.session.commit()
+        flash('Post Atualizado com Sucesso', 'alert-success')
+        return redirect(url_for('home'))
+
     return render_template('post.html', post=post, form=form)
 
 
-@app.route('/post/<post_id>/excluir', methods=['GET', 'POST'])
+@app.route('/post/<int:post_id>/excluir', methods=['GET', 'POST'])
 @login_required
 def excluir_post(post_id):
-    post = Post.query.get(post_id)
-    if current_user == post.autor:
-        database.session.delete(post)
-        database.session.commit()
-        flash('Post Excluído com Sucesso', 'alert-danger')
-        return redirect(url_for('home'))
-    else:
-        abort(403)
+    # só carrega se o post pertencer ao usuário logado
+    post = Post.query.filter_by(id=post_id, usuario_id=current_user.id).first_or_404()
+    database.session.delete(post)
+    database.session.commit()
+    flash('Post Excluído com Sucesso', 'alert-danger')
+    return redirect(url_for('home'))
 
 
